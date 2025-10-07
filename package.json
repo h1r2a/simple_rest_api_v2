@@ -1,6 +1,7 @@
 {
   "name": "simple_rest_api",
   "version": "1.0.0",
+<<<<<<< HEAD
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,6 +9,13 @@
     "node" :"index.js",
     "dev": "nodemon index.js"
 
+=======
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+>>>>>>> 3af23c2af6d2b53927d30d36d463521f7746a243
   },
   "repository": {
     "type": "git",
@@ -16,11 +24,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+<<<<<<< HEAD
   "type": "commonjs",
+=======
+>>>>>>> 3af23c2af6d2b53927d30d36d463521f7746a243
   "bugs": {
     "url": "https://github.com/HarenaLivarijaonaEsti/simple_rest_api/issues"
   },
   "homepage": "https://github.com/HarenaLivarijaonaEsti/simple_rest_api#readme",
+<<<<<<< HEAD
+=======
+  "description": "",
+>>>>>>> 3af23c2af6d2b53927d30d36d463521f7746a243
   "dependencies": {
     "express": "^5.1.0",
     "uuid": "^13.0.0"
