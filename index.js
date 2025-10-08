@@ -1,7 +1,7 @@
-const express = require('express');
-const { v4: uuidv4 } = require('uuid');
+import express, { json } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 const app = express();
-app.use(express.json());
+app.use(json());
 let users = [ { id: uuidv4(), name: 'Rochel', email: 'rochel@example.com' }];
 
 // POST create
@@ -31,3 +31,5 @@ app.get('/users', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+export default app;
