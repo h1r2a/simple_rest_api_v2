@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  app:
+    image: harenadocker/simple-node-restapi:latest
+    container_name: simple-node-restapi
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
