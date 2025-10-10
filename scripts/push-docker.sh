@@ -13,9 +13,9 @@ echo $DOCKER_PASSWORD
 echo harenaapple88 | docker login -u harenadocker --password-stdin
 # Construire l’image
 echo "Building simple-node-restapi image..."
-docker build -f Dockerfile -t harenadocker/simple-node-restapi:latest .
+# docker build -f Dockerfile -t harenadocker/simple-node-restapi:latest .
 echo " Image built successfully!"
 # Pousser sur Docker Hub
 echo "Pushing image to DockerHub..."
-docker push harenadocker/simple-node-restapi:latest
+# docker push harenadocker/simple-node-restapi:latest
 echo "Image pushed successfully!"
