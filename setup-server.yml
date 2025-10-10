@@ -10,12 +10,10 @@
         echo "Désactivation temporaire des dépôts non officiels..."
         find /etc/apt/sources.list.d -type f -name '*.list' -exec sed -i 's/^deb/#deb/' {} \;
       ignore_errors: yes
-
     - name: Mettre à jour le cache APT
       apt:
         update_cache: yes
       ignore_errors: yes
-
     - name: Installer les dépendances de base
       apt:
         name:
