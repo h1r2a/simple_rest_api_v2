@@ -37,10 +37,11 @@ jobs:
             echo 'Connexion à Docker Hub...';
             echo \"$DOCKER_PASSWORD\" | docker login -u \"$DOCKER_USERNAME\" --password-stdin;
             echo 'Déploiement du conteneur avec docker-compose...';
-            docker pull rochel05/simple-node-restapi:latest;
+            docker pull $DOCKER_USERNAME/simple-node-restapi:latest;
             docker-compose down || true;
             docker-compose up --build -d;
             echo 'Vérification du conteneur...';
             docker ps | grep simple-node-restapi || echo 'Conteneur non trouvé !';
             echo 'Déploiement terminé avec succès !';
           "
+          
