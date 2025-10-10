@@ -1,0 +1,46 @@
+name: CI/CD - simple-node-restapi Deployment
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Deploy and rebuild Docker image on remote server
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST 
+            echo '--- Début du déploiement ---';
+            cd $DEPLOY_PATH || git clone https://github.com/soniarimamy/simple-node-restapi.git $DEPLOY_PATH;
+            cd $DEPLOY_PATH;
+            echo 'Mise à jour du code depuis GitHub...';
+            git fetch origin;
+            git checkout main;
+            git pull origin main;
+            echo 'Construction et push de la nouvelle image Docker...';
+            export DOCKER_USERNAME='$DOCKER_USERNAME';
+            export DOCKER_PASSWORD='$DOCKER_PASSWORD';
+            chmod +x scripts/push-docker.sh;
+            ./scripts/push-docker.sh;
+            echo 'Connexion à Docker Hub...';
+            echo \"$DOCKER_PASSWORD\" | docker login -u \"$DOCKER_USERNAME\" --password-stdin;
+            echo 'Déploiement du conteneur avec docker-compose...';
+            docker pull rochel05/simple-node-restapi:latest;
+            docker-compose down || true;
+            docker-compose up --build -d;
+            echo 'Vérification du conteneur...';
+            docker ps | grep simple-node-restapi || echo 'Conteneur non trouvé !';
+            echo 'Déploiement terminé avec succès !';
+          "
