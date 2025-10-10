@@ -1,6 +1,7 @@
 # Simple Node REST API
 ## Description
 Cette application est une API REST simple en Node.js utilisant Express. Elle permet de gérer des utilisateurs avec les opérations suivantes : GET, POST, PUT.
+CHANGE YOUR OWN IP ADRESS FOR inventory.ini file
 ## Installation
 ### 1. Cloner le projet :
 ```
