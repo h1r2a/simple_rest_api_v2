@@ -37,7 +37,7 @@ jobs:
             echo 'Connexion à Docker Hub...';
             echo \"$DOCKER_PASSWORD\" | docker login -u \"$DOCKER_USERNAME\" --password-stdin;
             echo 'Déploiement du conteneur avec docker-compose...';
-            docker pull $DOCKER_USERNAME/simple-node-restapi:latest;
+            docker pull harenadocker/simple-node-restapi:latest;
             docker-compose down || true;
             docker-compose up --build -d;
             echo 'Vérification du conteneur...';
