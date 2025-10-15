@@ -30,8 +30,8 @@ jobs:
             git checkout main;
             git pull origin main;
             echo 'Construction et push de la nouvelle image Docker...';
-            export DOCKER_USERNAME='$DOCKER_USERNAME';
-            export DOCKER_PASSWORD='$DOCKER_PASSWORD';
+            export DOCKER_USERNAME=\"$DOCKER_USERNAME\";
+            export DOCKER_PASSWORD=\"$DOCKER_PASSWORD\";
             chmod +x scripts/push-docker.sh;
             ./scripts/push-docker.sh;
             echo 'Connexion à Docker Hub...';
