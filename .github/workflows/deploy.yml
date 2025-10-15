@@ -1,4 +1,4 @@
-name: CI/CD - simple-node-restapi Deployment
+name: CI/CD - simple_rest_api_v2 Deployment
 on:
   push:
     branches:
@@ -23,7 +23,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST 
             echo '--- Début du déploiement ---';
-            cd $DEPLOY_PATH || git clone https://github.com/soniarimamy/simple-node-restapi.git $DEPLOY_PATH;
+            cd $DEPLOY_PATH || git clone https://github.com/h1r2a/simple_rest_api_v2.git $DEPLOY_PATH;
             cd $DEPLOY_PATH;
             echo 'Mise à jour du code depuis GitHub...';
             git fetch origin;
@@ -37,11 +37,10 @@ jobs:
             echo 'Connexion à Docker Hub...';
             echo \"$DOCKER_PASSWORD\" | docker login -u \"$DOCKER_USERNAME\" --password-stdin;
             echo 'Déploiement du conteneur avec docker-compose...';
-            docker pull harenadocker/simple-node-restapi:latest;
+            docker pull harentsoa008/simple_rest_api_v2:latest;
             docker-compose down || true;
             docker-compose up --build -d;
             echo 'Vérification du conteneur...';
-            docker ps | grep simple-node-restapi || echo 'Conteneur non trouvé !';
+            docker ps | grep simple_rest_api_v2 || echo 'Conteneur non trouvé !';
             echo 'Déploiement terminé avec succès !';
           "
-          
