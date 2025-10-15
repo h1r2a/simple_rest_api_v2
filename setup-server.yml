@@ -4,16 +4,19 @@
   become: true
   become_method: sudo
   remote_user: provision
+
   tasks:
     - name: Désactiver les dépôts tiers non officiels
       shell: |
         echo "Désactivation temporaire des dépôts non officiels..."
         find /etc/apt/sources.list.d -type f -name '*.list' -exec sed -i 's/^deb/#deb/' {} \;
       ignore_errors: yes
+
     - name: Mettre à jour le cache APT
       apt:
         update_cache: yes
       ignore_errors: yes
+
     - name: Installer les dépendances de base
       apt:
         name:
@@ -22,17 +25,40 @@
           - apt-transport-https
           - ca-certificates
           - software-properties-common
+          - gnupg
         state: present
         update_cache: yes
       ignore_errors: yes
-    - name: Ajouter la clé GPG officielle de Docker
-      ansible.builtin.apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+
+    # ✅ Méthode moderne pour ajouter la clé Docker
+    - name: Créer le dossier des keyrings
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Télécharger la clé GPG Docker
+      ansible.builtin.shell: |
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      args:
+        creates: /etc/apt/keyrings/docker.gpg
+
+    - name: Donner les permissions à la clé GPG Docker
+      ansible.builtin.file:
+        path: /etc/apt/keyrings/docker.gpg
+        mode: '0644'
+
+    # ✅ Nouveau dépôt Docker (lié à la clé)
     - name: Ajouter le dépôt officiel Docker
       ansible.builtin.apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable"
         state: present
+        filename: docker
+
+    - name: Mettre à jour le cache APT après ajout du dépôt Docker
+      ansible.builtin.apt:
+        update_cache: yes
+
     - name: Installer Docker et Docker Compose
       apt:
         name:
@@ -42,24 +68,29 @@
           - docker-compose-plugin
         state: latest
         update_cache: yes
+
     - name: Ajouter l’utilisateur courant au groupe docker
       user:
         name: '{{ ansible_user }}'
         groups: docker
         append: yes
+
     - name: Activer et démarrer le service Docker
       systemd:
         name: docker
         enabled: yes
         state: started
+
     - name: Vérifier la version de Docker
       command: docker --version
       register: docker_version_output
       changed_when: false
+
     - name: Vérifier la version de Docker Compose
       command: docker compose version
       register: compose_version_output
       changed_when: false
+
     - name: Afficher les résultats
       debug:
         msg:
